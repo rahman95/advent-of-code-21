@@ -1,36 +1,75 @@
 const fs = require("fs");
 
-const data = fs.readFileSync("input.txt", "utf8");
-const inputArray = data
-  .toString()
-  .split("\n")
-  .map((instruction) => {
-    const split = instruction.split(" ");
-    return {
-      direction: split[0],
-      value: parseInt(split[1]),
-    };
+const readFile = () => {
+  const data = fs.readFileSync("input.txt", "utf8");
+  return data
+    .toString()
+    .split("\n")
+    .map((instruction) => {
+      const split = instruction.split(" ");
+      return {
+        direction: split[0],
+        value: parseInt(split[1]),
+      };
+    });
+};
+
+const part1 = () => {
+  const inputArray = readFile();
+
+  let horizontalTotal = 0;
+  let depthTotal = 0;
+  inputArray.forEach((instruction) => {
+    const { direction, value } = instruction;
+
+    if (direction === "forward") {
+      horizontalTotal += value;
+    }
+    if (direction === "up") {
+      depthTotal -= value;
+    }
+    if (direction === "down") {
+      depthTotal += value;
+    }
   });
 
-let horizontalTotal = 0;
-let depthTotal = 0;
-inputArray.forEach((instruction) => {
-  const { direction, value } = instruction;
+  console.log({
+    count: inputArray.length,
+    horizontalTotal,
+    depthTotal,
+    finalPosition: horizontalTotal * depthTotal,
+  });
+};
 
-  if (direction === "forward") {
-    horizontalTotal += value;
-  }
-  if (direction === "up") {
-    depthTotal -= value;
-  }
-  if (direction === "down") {
-    depthTotal += value;
-  }
-});
+const part2 = () => {
+  const inputArray = readFile();
 
-console.log({
-  count: inputArray.length,
-  horizontalTotal,
-  depthTotal,
-  finalPosition: horizontalTotal * depthTotal,
-});
+  let aimTotal = 0;
+  let horizontalTotal = 0;
+  let depthTotal = 0;
+  inputArray.forEach((instruction) => {
+    const { direction, value } = instruction;
+
+    if (direction === "forward") {
+      horizontalTotal += value;
+      depthTotal += aimTotal * value;
+    }
+    if (direction === "up") {
+      aimTotal -= value;
+    }
+    if (direction === "down") {
+      aimTotal += value;
+    }
+  });
+
+  console.log({
+    count: inputArray.length,
+    horizontalTotal,
+    depthTotal,
+    aimTotal,
+    finalPosition: horizontalTotal * depthTotal,
+  });
+};
+
+// part1();
+// part2();
